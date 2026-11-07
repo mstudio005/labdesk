@@ -1,0 +1,317 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2026 Syed Mutaib
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+
+// Drawn icons (font glyphs for ticks and crosses are missing on some Windows machines).
+export component Tick inherits Path {
+    in property <color> tone: white;
+    viewbox-width: 16; viewbox-height: 16;
+    commands: "M 2.5 8.5 L 6.5 12.5 L 13.5 3.5";
+    stroke: root.tone; stroke-width: 2.4px; stroke-line-cap: round; stroke-line-join: round;
+}
+export component Cross inherits Path {
+    in property <color> tone: Theme.muted;
+    viewbox-width: 16; viewbox-height: 16;
+    commands: "M 3 3 L 13 13 M 13 3 L 3 13";
+    stroke: root.tone; stroke-width: 2px; stroke-line-cap: round;
+}
+
+export component Micro inherits Text {
+    color: Theme.muted;
+    font-family: Theme.mono;
+    font-size: 11px;
+    letter-spacing: 1.4px;
+}
+
+// Wrap a page so it fades and slides up a little when it appears.
+export component PageIn inherits Rectangle {
+    in-out property <float> t: 0;
+    opacity: root.t;
+    animate t { duration: Theme.page; easing: ease-out; }
+    init => { self.t = 1; }
+    Rectangle {
+        y: (1 - root.t) * 16px;
+        width: parent.width; height: parent.height;
+        @children
+    }
+}
+
+export component Btn inherits Rectangle {
+    in property <string> text;
+    in property <bool> primary: false;
+    in property <bool> enabled: true;
+    in property <color> tone: Theme.ink;
+    callback clicked();
+    height: 36px;
+    border-width: 1px;
+    border-color: root.enabled ? root.tone : Theme.line;
+    background: !root.enabled ? transparent
+        : root.primary ? (ta.pressed ? root.tone.darker(0.2) : ta.has-hover ? root.tone.brighter(0.3) : root.tone)
+        : (ta.pressed ? Theme.line : ta.has-hover ? Theme.hover : transparent);
+    animate background { duration: Theme.quick; }
+    HorizontalLayout {
+        padding-left: 16px; padding-right: 16px;
+        Text {
+            text: root.text;
+            color: !root.enabled ? Theme.line : root.primary ? white : root.tone;
+            font-family: Theme.mono; font-size: 11px; font-weight: 700; letter-spacing: 1.4px;
+            vertical-alignment: center;
+        }
+    }
+    ta := TouchArea { enabled: root.enabled; clicked => { root.clicked(); } mouse-cursor: root.enabled ? pointer : default; }
+}
+
+// A small tab used for the role switcher.
+export component Chip inherits Rectangle {
+    in property <string> text;
+    in property <bool> active: false;
+    callback clicked();
+    background: root.active ? Theme.ink : (ta.has-hover ? Theme.hover : transparent);
+    animate background { duration: Theme.quick; }
+    HorizontalLayout {
+        padding-left: 11px; padding-right: 11px;
+        Text { text: root.text; color: root.active ? white : Theme.ink; font-family: Theme.mono; font-size: 10px; font-weight: 700; letter-spacing: 1.3px; vertical-alignment: center; animate color { duration: Theme.quick; } }
+    }
+    ta := TouchArea { clicked => { root.clicked(); } mouse-cursor: pointer; }
+}
+
+// Bordered text field. If `error` is set the field turns red and the message appears right under it.
+export component Field inherits VerticalLayout {
+    in property <string> label;
+    in property <string> placeholder;
+    in property <string> error;
+    in property <bool> read-only: false;
+    in property <bool> mono: false;
+    in property <bool> numeric: false;
+    in property <bool> password: false;
+    in-out property <string> text <=> input.text;
+    callback edited(string);
+    callback accepted();
+    forward-focus: input;
+    spacing: 4px;
+    alignment: start;
+    if root.label != "": Micro { text: root.label.to-uppercase(); color: root.error != "" ? Theme.red : Theme.muted; }
+    Rectangle {
+        height: 36px;
+        border-width: root.error != "" || input.has-focus ? 2px : 1px;
+        border-color: root.error != "" ? Theme.red : input.has-focus ? Theme.ink : Theme.line;
+        background: root.read-only ? Theme.bg : Theme.paper;
+        animate border-color { duration: Theme.quick; }
+        HorizontalLayout {
+            padding-left: 10px; padding-right: 10px;
+            input := TextInput {
+                read-only: root.read-only;
+                input-type: root.password ? InputType.password : root.numeric ? InputType.decimal : InputType.text;
+                color: Theme.ink; font-size: 14px;
+                font-family: root.mono ? Theme.mono : Theme.sans;
+                vertical-alignment: center;
+                edited => { root.edited(self.text); }
+                accepted => { root.accepted(); }
+            }
+        }
+        if input.text == "" && root.placeholder != "": Text {
+            x: 10px; text: root.placeholder; color: #a9a59b; font-size: 14px; vertical-alignment: center;
+            font-family: root.mono ? Theme.mono : Theme.sans;
+        }
+    }
+    if root.error != "": Text { text: root.error; color: Theme.red; font-size: 12px; font-weight: 600; wrap: word-wrap; }
+}
+
+// Pick one of several short options (e.g. Male / Female / Other).
+export component Seg inherits VerticalLayout {
+    in property <string> label;
+    in property <[string]> options;
+    in property <[bool]> locked;
+    in-out property <int> index: 0;
+    spacing: 4px;
+    if root.label != "": Micro { text: root.label.to-uppercase(); }
+    HorizontalLayout {
+        height: 36px;
+        for o[i] in root.options: Rectangle {
+            border-width: 1px;
+            border-color: root.index == i ? Theme.ink : Theme.line;
+            background: root.index == i ? Theme.ink : (ta.has-hover && !root.locked[i] ? Theme.hover : Theme.paper);
+            animate background { duration: Theme.quick; }
+            Text { text: o; color: root.locked[i] ? #b3afa5 : root.index == i ? white : Theme.ink; font-size: 13px; horizontal-alignment: center; vertical-alignment: center; }
+            ta := TouchArea { clicked => { if (!root.locked[i]) { root.index = i; } } mouse-cursor: root.locked[i] ? default : pointer; }
+        }
+    }
+}
+
+export component StatusChip inherits Rectangle {
+    in property <string> status;
+    property <color> tone: status == "Completed" ? Theme.green : status == "Delivered" ? Theme.blue : status == "Partial" ? Theme.amber : Theme.muted;
+    property <string> shown: status == "Completed" ? "READY" : status == "Pending" ? "WAITING" : status.to-uppercase();
+    border-width: 1px; border-color: tone;
+    height: 20px; width: label.preferred-width + 16px;
+    label := Text { text: root.shown; color: root.tone; font-family: Theme.mono; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; horizontal-alignment: center; vertical-alignment: center; }
+}
+
+export component FlagChip inherits Rectangle {
+    in property <string> flag;
+    width: 54px; height: 20px;
+    if root.flag != "": Rectangle {
+        background: root.flag == "Critical" ? Theme.red : root.flag == "H" ? Theme.amber : Theme.blue;
+        in-out property <float> t: 0;
+        opacity: self.t;
+        animate t { duration: 220ms; easing: ease-out; }
+        init => { self.t = 1; }
+        Text { text: root.flag == "Critical" ? "CRIT" : root.flag == "H" ? "HIGH" : "LOW"; color: white; font-family: Theme.mono; font-size: 10px; font-weight: 700; letter-spacing: 1px; horizontal-alignment: center; vertical-alignment: center; }
+    }
+}
+
+// A number card on the home screen. Cards fade in one after another.
+export component StatCard inherits Rectangle {
+    in property <string> label;
+    in property <string> value;
+    in property <string> hint;
+    in property <color> tone;
+    in property <int> index;
+    in-out property <float> t: 0;
+    opacity: root.t;
+    animate t { delay: root.index * 90ms; duration: 420ms; easing: ease-out; }
+    init => { self.t = 1; }
+    background: ta.has-hover ? white : Theme.paper;
+    animate background { duration: Theme.quick; }
+    border-width: 1px; border-color: Theme.line;
+    callback clicked();
+    Rectangle { x: 0; y: 0; height: 4px; width: parent.width * root.t; background: root.tone; }
+    VerticalLayout {
+        padding: 18px; padding-top: 22px; spacing: 6px;
+        Micro { text: root.label; }
+        Text { text: root.value; font-size: 36px; font-weight: 700; color: Theme.ink; }
+        Text { text: root.hint; font-size: 12px; color: Theme.muted; overflow: elide; }
+    }
+    ta := TouchArea { clicked => { root.clicked(); } mouse-cursor: pointer; }
+}
+
+// Message that slides down from the top of the window, so it can't be missed. Green = done, red = problem.
+// The component itself is a transparent layer over the whole window (it never blocks clicks); only the card is drawn.
+export component Toast inherits Rectangle {
+    in property <string> text;
+    in property <bool> bad;
+    in property <bool> shown;
+    callback dismissed();
+    card := Rectangle {
+        width: min(640px, root.width - 48px);
+        x: (root.width - self.width) / 2;
+        y: root.shown ? 3px : -100px;
+        animate y { duration: 360ms; easing: cubic-bezier(0.2, 0.9, 0.25, 1.12); }
+        opacity: root.shown ? 1 : 0;
+        animate opacity { duration: 200ms; }
+        height: row.preferred-height;
+        background: white;
+        border-width: 1px; border-color: root.bad ? Theme.red : Theme.green;
+        drop-shadow-blur: 22px; drop-shadow-color: #14130f30; drop-shadow-offset-y: 6px;
+        Rectangle { x: 0; width: 6px; background: root.bad ? Theme.red : Theme.green; }
+        row := HorizontalLayout {
+            padding-left: 22px; padding-right: 14px; padding-top: 12px; padding-bottom: 12px; spacing: 14px;
+            Rectangle {
+                width: 26px; height: 26px; y: (parent.height - self.height) / 2;
+                background: root.bad ? Theme.red : Theme.green; border-radius: 13px;
+                if root.bad: Text { text: "!"; color: white; font-size: 15px; font-weight: 800; horizontal-alignment: center; vertical-alignment: center; }
+                if !root.bad: Tick { x: 6px; y: 6px; width: 14px; height: 14px; }
+            }
+            Text { text: root.text; font-size: 14px; color: Theme.ink; font-weight: 600; vertical-alignment: center; wrap: word-wrap; horizontal-stretch: 1; }
+            Rectangle { width: 24px; Cross { x: 6px; y: (parent.height - 12px) / 2; width: 12px; height: 12px; } TouchArea { clicked => { root.dismissed(); } mouse-cursor: pointer; } }
+        }
+    }
+}
+
+// A dropdown: shows the current value, opens a list to choose from. `arrow-only` makes it a small ▾ button
+// (used next to a box you can also type in, like the unit).
+export component Pick inherits Rectangle {
+    in property <[string]> options;
+    in property <string> text;
+    in property <string> placeholder: "Choose…";
+    in property <bool> enabled: true;
+    in property <bool> arrow-only: false;
+    in property <bool> clearable: false;
+    in property <bool> mono: false;
+    in property <length> menu-width: 200px;
+    callback opened();
+    callback picked(string);
+    height: 32px;
+    background: root.enabled ? white : transparent;
+    border-width: root.enabled ? 1px : 0px;
+    border-color: ta.has-hover ? Theme.ink : Theme.line;
+    animate border-color { duration: Theme.quick; }
+    if !root.arrow-only: Text {
+        x: 8px; width: parent.width - (root.enabled ? 30px : 10px);
+        text: root.text != "" ? root.text : (root.enabled ? root.placeholder : "");
+        color: root.text != "" ? Theme.ink : #a9a59b;
+        font-size: 13px; font-family: root.mono ? Theme.mono : Theme.sans; font-weight: root.text != "" ? 600 : 400;
+        vertical-alignment: center; overflow: elide;
+    }
+    if root.enabled: Path {
+        x: root.width - 20px; y: (root.height - 6px) / 2; width: 11px; height: 6px;
+        viewbox-width: 11; viewbox-height: 6;
+        commands: "M 1 1 L 5.5 5 L 10 1";
+        stroke: Theme.ink; stroke-width: 1.8px; stroke-line-cap: round; stroke-line-join: round;
+    }
+    ta := TouchArea { enabled: root.enabled; clicked => { root.opened(); pop.show(); } mouse-cursor: pointer; }
+    pop := PopupWindow {
+        x: root.arrow-only ? root.width - root.menu-width : 0px; y: root.height + 2px;
+        width: root.arrow-only ? root.menu-width : max(root.width, root.menu-width);
+        height: min(236px, (root.options.length + (root.clearable ? 1 : 0)) * 34px + 2px);
+        Rectangle {
+            background: white; border-width: 1px; border-color: Theme.ink;
+            drop-shadow-blur: 16px; drop-shadow-color: #14130f30; drop-shadow-offset-y: 4px;
+            ScrollView {
+                VerticalLayout {
+                    for o in root.options: Rectangle {
+                        height: 34px;
+                        background: oa.has-hover ? Theme.hover : transparent;
+                        Text { x: 12px; text: o; font-size: 13px; color: o == root.text ? Theme.blue : Theme.ink; font-weight: o == root.text ? 700 : 400; vertical-alignment: center; overflow: elide; width: parent.width - 20px; }
+                        oa := TouchArea { clicked => { root.picked(o); pop.close(); } mouse-cursor: pointer; }
+                    }
+                    if root.clearable: Rectangle {
+                        height: 34px;
+                        background: ca.has-hover ? Theme.hover : transparent;
+                        Text { x: 12px; text: "Clear (leave empty)"; font-size: 12px; color: Theme.muted; vertical-alignment: center; }
+                        ca := TouchArea { clicked => { root.picked(""); pop.close(); } mouse-cursor: pointer; }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// A small padlock, drawn (font symbols for locks are missing on some Windows machines).
+export component Padlock inherits Rectangle {
+    in property <color> tone: Theme.muted;
+    Path {
+        x: parent.width * 0.2; y: 0px; width: parent.width * 0.6; height: parent.height * 0.55;
+        viewbox-width: 10; viewbox-height: 10;
+        commands: "M 1.5 9.5 L 1.5 5 A 3.5 3.5 0 0 1 8.5 5 L 8.5 9.5";
+        stroke: root.tone; stroke-width: 1.6px; fill: transparent; stroke-line-cap: round;
+    }
+    Rectangle { y: parent.height * 0.42; height: parent.height * 0.58; border-radius: 2px; background: root.tone; }
+    Rectangle { x: parent.width / 2 - 1.5px; y: parent.height * 0.62; width: 3px; height: parent.height * 0.2; background: white; border-radius: 1.5px; }
+}
+
+// A tick box with a label. The page owns the value: `checked` is set from outside and `toggled` reports a click.
+export component Check inherits Rectangle {
+    in property <string> text;
+    in property <bool> checked: false;
+    in property <bool> enabled: true;
+    callback toggled(bool);
+    height: 28px;
+    preferred-width: lay.preferred-width;
+    lay := HorizontalLayout {
+        spacing: 8px; alignment: start;
+        VerticalLayout { alignment: center;
+            Rectangle {
+                width: 18px; height: 18px;
+                border-width: 1.5px; border-color: root.checked ? Theme.ink : (ta.has-hover ? Theme.ink : #8d897f);
+                background: root.checked ? Theme.ink : white;
+                animate background { duration: Theme.quick; }
+                if root.checked: Tick { x: 2px; y: 2px; width: 14px; height: 14px; }
+            }
+        }
+        if root.text != "": Text { text: root.text; font-size: 13px; color: root.enabled ? Theme.ink : Theme.muted; vertical-alignment: center; }
+    }
+    ta := TouchArea { enabled: root.enabled; clicked => { root.toggled(!root.checked); } mouse-cursor: pointer; }
+}

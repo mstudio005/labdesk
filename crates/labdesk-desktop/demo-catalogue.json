@@ -1,0 +1,382 @@
+{
+ "demo": true,
+ "note": "Synthetic demo data for trying the app. Not a clinical reference: each lab must enter and verify its own tests and ranges.",
+ "tests": [
+  {
+   "code": "CBC",
+   "name": "Complete Blood Count",
+   "department": "HAEMATOLOGY",
+   "sample": "EDTA",
+   "price_paise": 35000,
+   "config": {
+    "parameters": [
+     {
+      "id": "hb",
+      "name": "Haemoglobin",
+      "field": "Numeric",
+      "unit": "g/dL",
+      "critical_low": 7,
+      "gender_ranges": {
+       "Male": {
+        "low": 13,
+        "high": 17
+       },
+       "Female": {
+        "low": 12,
+        "high": 15
+       },
+       "Child": {
+        "low": 11,
+        "high": 14
+       }
+      },
+      "required": true
+     },
+     {
+      "id": "rbc",
+      "name": "RBC count",
+      "field": "Numeric",
+      "unit": "million/µL",
+      "gender_ranges": {
+       "Male": {
+        "low": 4.5,
+        "high": 5.9
+       },
+       "Female": {
+        "low": 4.1,
+        "high": 5.1
+       },
+       "Child": {
+        "low": 4.0,
+        "high": 5.2
+       }
+      }
+     },
+     {
+      "id": "hct",
+      "name": "Haematocrit (PCV)",
+      "field": "Numeric",
+      "unit": "%",
+      "gender_ranges": {
+       "Male": {
+        "low": 40,
+        "high": 52
+       },
+       "Female": {
+        "low": 36,
+        "high": 46
+       },
+       "Child": {
+        "low": 33,
+        "high": 43
+       }
+      }
+     },
+     {
+      "id": "mcv",
+      "name": "MCV",
+      "field": "Numeric",
+      "unit": "fL",
+      "low": 80,
+      "high": 100,
+      "formula": "<hct> / <rbc> * 10"
+     },
+     {
+      "id": "mch",
+      "name": "MCH",
+      "field": "Numeric",
+      "unit": "pg",
+      "low": 27,
+      "high": 33,
+      "formula": "<hb> / <rbc> * 10"
+     },
+     {
+      "id": "mchc",
+      "name": "MCHC",
+      "field": "Numeric",
+      "unit": "g/dL",
+      "low": 32,
+      "high": 36,
+      "formula": "<hb> / <hct> * 100"
+     },
+     {
+      "id": "wbc",
+      "name": "Total WBC count",
+      "field": "Numeric",
+      "unit": "/µL",
+      "low": 4000,
+      "high": 11000,
+      "critical_low": 2000,
+      "critical_high": 30000
+     },
+     {
+      "id": "plt",
+      "name": "Platelet count",
+      "field": "Numeric",
+      "unit": "/µL",
+      "low": 150000,
+      "high": 450000,
+      "critical_low": 20000
+     }
+    ]
+   }
+  },
+  {
+   "code": "FBS",
+   "name": "Fasting Blood Sugar",
+   "department": "BIOCHEMISTRY",
+   "sample": "Fluoride",
+   "price_paise": 8000,
+   "config": {
+    "parameters": [
+     {
+      "id": "glu",
+      "name": "Glucose (fasting)",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "low": 70,
+      "high": 100,
+      "critical_low": 40,
+      "critical_high": 400,
+      "required": true
+     }
+    ]
+   }
+  },
+  {
+   "code": "LIPID",
+   "name": "Lipid Profile",
+   "department": "BIOCHEMISTRY",
+   "sample": "Serum",
+   "price_paise": 45000,
+   "config": {
+    "parameters": [
+     {
+      "id": "tc",
+      "name": "Total cholesterol",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 200
+     },
+     {
+      "id": "hdl",
+      "name": "HDL cholesterol",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "low": 40
+     },
+     {
+      "id": "tg",
+      "name": "Triglycerides",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 150,
+      "critical_high": 1000
+     },
+     {
+      "id": "ldl",
+      "name": "LDL cholesterol (calculated)",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 100,
+      "formula": "<tc> - <hdl> - <tg> / 5"
+     },
+     {
+      "id": "vldl",
+      "name": "VLDL (calculated)",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 30,
+      "formula": "<tg> / 5"
+     }
+    ]
+   }
+  },
+  {
+   "code": "LFT",
+   "name": "Liver Function Test",
+   "department": "BIOCHEMISTRY",
+   "sample": "Serum",
+   "price_paise": 50000,
+   "config": {
+    "parameters": [
+     {
+      "id": "tbil",
+      "name": "Total bilirubin",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "low": 0.2,
+      "high": 1.2
+     },
+     {
+      "id": "dbil",
+      "name": "Direct bilirubin",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 0.3
+     },
+     {
+      "id": "ibil",
+      "name": "Indirect bilirubin (calculated)",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "high": 0.9,
+      "formula": "<tbil> - <dbil>"
+     },
+     {
+      "id": "sgot",
+      "name": "SGOT (AST)",
+      "field": "Numeric",
+      "unit": "U/L",
+      "high": 40
+     },
+     {
+      "id": "sgpt",
+      "name": "SGPT (ALT)",
+      "field": "Numeric",
+      "unit": "U/L",
+      "high": 41
+     },
+     {
+      "id": "alp",
+      "name": "Alkaline phosphatase",
+      "field": "Numeric",
+      "unit": "U/L",
+      "low": 44,
+      "high": 147
+     }
+    ]
+   }
+  },
+  {
+   "code": "KFT",
+   "name": "Kidney Function Test",
+   "department": "BIOCHEMISTRY",
+   "sample": "Serum",
+   "price_paise": 40000,
+   "config": {
+    "parameters": [
+     {
+      "id": "urea",
+      "name": "Urea",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "low": 15,
+      "high": 45
+     },
+     {
+      "id": "creat",
+      "name": "Creatinine",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "critical_high": 10,
+      "gender_ranges": {
+       "Male": {
+        "low": 0.7,
+        "high": 1.3
+       },
+       "Female": {
+        "low": 0.6,
+        "high": 1.1
+       }
+      }
+     },
+     {
+      "id": "ua",
+      "name": "Uric acid",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "low": 3.4,
+      "high": 7.0
+     }
+    ]
+   }
+  },
+  {
+   "code": "TSH",
+   "name": "TSH",
+   "department": "ENDOCRINOLOGY",
+   "sample": "Serum",
+   "price_paise": 30000,
+   "config": {
+    "parameters": [
+     {
+      "id": "tsh",
+      "name": "TSH",
+      "field": "Numeric",
+      "unit": "µIU/mL",
+      "low": 0.4,
+      "high": 4.0
+     }
+    ]
+   }
+  },
+  {
+   "code": "HBA1C",
+   "name": "HbA1c",
+   "department": "BIOCHEMISTRY",
+   "sample": "EDTA",
+   "price_paise": 45000,
+   "config": {
+    "parameters": [
+     {
+      "id": "a1c",
+      "name": "HbA1c",
+      "field": "Numeric",
+      "unit": "%",
+      "high": 5.6
+     },
+     {
+      "id": "eag",
+      "name": "Estimated average glucose (calculated)",
+      "field": "Numeric",
+      "unit": "mg/dL",
+      "formula": "28.7 * <a1c> - 46.7"
+     }
+    ]
+   }
+  },
+  {
+   "code": "URINE",
+   "name": "Urine Routine",
+   "department": "CLINICAL PATHOLOGY",
+   "sample": "Urine",
+   "price_paise": 10000,
+   "config": {
+    "parameters": [
+     {
+      "id": "colour",
+      "name": "Colour",
+      "field": "Dropdown",
+      "unit": "",
+      "options": [
+       "Pale yellow",
+       "Yellow",
+       "Dark yellow",
+       "Red"
+      ]
+     },
+     {
+      "id": "alb",
+      "name": "Albumin",
+      "field": "Dropdown",
+      "unit": "",
+      "options": [
+       "Nil",
+       "Trace",
+       "+",
+       "++",
+       "+++"
+      ]
+     },
+     {
+      "id": "pus",
+      "name": "Pus cells",
+      "field": "Text",
+      "unit": "/HPF"
+     }
+    ]
+   }
+  }
+ ]
+}

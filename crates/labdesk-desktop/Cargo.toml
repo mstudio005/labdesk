@@ -1,0 +1,38 @@
+[package]
+name = "labdesk-desktop"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "The LabDesk desktop app (Slint screens)."
+
+[lib]
+name = "labdesk_desktop"
+path = "src/lib.rs"
+
+[[bin]]
+name = "labdesk"
+path = "src/main.rs"
+
+[dependencies]
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg"] }
+labdesk-core = { path = "../labdesk-core" }
+getrandom = "0.3"
+open = "5.4.4"
+lettre = { version = "0.11.23", default-features = false, features = ["smtp-transport", "builder", "rustls", "ring", "webpki-roots", "hostname"] }
+rfd = "0.17.2"
+# The software renderer only: the default also builds an OpenGL renderer, which keeps big graphics-driver buffers
+# alive (hundreds of MB on some PCs). Accessibility and the system tray are not used by this program.
+slint = { version = "1.18.1", default-features = false, features = ["std", "backend-winit", "renderer-software", "compat-1-2"] }
+
+[build-dependencies]
+slint-build = "1.18.1"
+
+[dev-dependencies]
+png = "0.18.1"
+tempfile = "3"
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"

@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["crates/labdesk-core", "crates/labdesk-desktop"]
+
+[workspace.package]
+edition = "2021"
+version = "1.0.0"
+license = "GPL-3.0-only"
+authors = ["Syed Mutaib <syedmutaibnazir@gmail.com>"]
+repository = "https://github.com/mstudio005/labdesk"
+homepage = "https://labdesk.mutaib.me"
+readme = "README.md"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

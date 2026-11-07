@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security problem
+    url: https://github.com/mstudio005/labdesk/blob/main/SECURITY.md
+    about: Please report security problems privately by email, not as a public issue.
+  - name: Manual and how-to questions
+    url: https://labdesk.mutaib.me/docs/
+    about: The documentation explains every screen and setting.

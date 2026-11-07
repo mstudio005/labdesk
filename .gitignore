@@ -1,0 +1,10 @@
+/target
+*.db
+*.db-wal
+*.db-shm
+*.ldbk
+
+# screenshots made by the screenshot example, local output, installer output
+/*.png
+/dist/
+/docs/

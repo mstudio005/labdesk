@@ -1,0 +1,26 @@
+[package]
+name = "labdesk-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Lab rules, SQLite storage and PDF reports for LabDesk."
+
+[dependencies]
+rusqlite = { version = "0.37", features = ["bundled", "backup"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+krilla = "0.8.2"
+qrcode = { version = "0.14", default-features = false }
+getrandom = "0.3"
+sha2 = { version = "0.11.1", default-features = false }
+ttf-parser = { version = "0.25.1", default-features = false }
+image = { version = "0.25.10", default-features = false, features = ["jpeg", "png"] }
+chacha20poly1305 = { version = "0.10", default-features = false, features = ["alloc"] }
+
+[dev-dependencies]
+tempfile = "3"
+rusqlite = { version = "0.37", features = ["bundled"] }

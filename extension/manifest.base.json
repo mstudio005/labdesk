@@ -1,0 +1,17 @@
+{
+  "name": "LabDesk Bridge",
+  "short_name": "LabDesk Bridge",
+  "version": "0.1.1",
+  "description": "Attaches the report from LabDesk to the WhatsApp Web chat. You still press Send yourself.",
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "permissions": [],
+  "host_permissions": ["http://127.0.0.1/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["src/whatsapp.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": { "default_title": "LabDesk Bridge", "default_popup": "src/popup.html" }
+}

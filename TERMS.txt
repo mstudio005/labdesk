@@ -1,0 +1,50 @@
+LABDESK: TERMS OF USE AND PRIVACY
+Version 1  -  November 2026
+Author: Syed Mutaib (https://github.com/mstudio005)  -  Contact: syedmutaibnazir@gmail.com
+
+Please read this before you use LabDesk. By installing or using LabDesk you agree to it.
+If you do not agree, do not install or use LabDesk.
+
+1. WHAT LABDESK IS
+LabDesk is free software for running a pathology laboratory on one Windows computer: registering patients, entering results, printing bills and reports, and keeping the lab's records. It is released under the GNU General Public License, version 3 (see the LICENSE file). You may use, study, change and share it under that licence.
+
+2. LABDESK IS A TOOL, NOT A DOCTOR
+LabDesk is not a medical device and gives no medical advice, diagnosis or treatment. It prints the values that people in your lab type in or attach from a machine, and marks them HIGH, LOW or CRIT by comparing them with the normal ranges that are stored in the program.
+- The lab, and its pathologist, are fully responsible for every result and every report that is approved and handed out.
+- The normal ranges, units, methods and formulas in the standard test list are a starting point. They can be wrong for your kit, machine, method or patients. Check every range and formula against your kit insert and your own standards before you use it.
+- Always check a result before you approve it. A doctor must approve a report before it is printed.
+
+3. YOUR DATA IS YOUR RESPONSIBILITY
+- All patient records, results, bills, payments, users and settings are kept in one file on this computer. The author has no access to them.
+- You are responsible for keeping that data safe: use strong passwords, give each person their own sign-in, keep the recovery code and any backup password in a safe place, make regular backups to another drive, and keep the computer physically safe.
+- A lost password, recovery code or backup password cannot be recovered by the author.
+- You are responsible for following the laws and rules that apply to your lab, including the privacy of patients' health information, consent, and how long records must be kept.
+- Sending a report by email or WhatsApp is your decision. Check the address or phone number before you send.
+
+4. PRIVACY: WHAT LABDESK COLLECTS AND SENDS
+LabDesk does not collect your data. It has no account system and no server of its own, and the author does not receive your patient data.
+- Stored on your computer only: patients, orders, results, payments, users, settings and backups.
+- Update check: when LabDesk starts, and every few hours, it asks GitHub for the latest version number and downloads a newer installer if there is one. GitHub can see that request, as with any download. You can turn this off in Settings > About.
+- Email: switched off until your Admin turns it on. When you press EMAIL, the report is sent through the mail service you chose. That service and the patient's email provider can see the message and file.
+- WhatsApp: LabDesk opens WhatsApp Web in your browser. WhatsApp handles the message under its own terms. You press Send yourself.
+- LabDesk Bridge browser extension (optional): talks only to LabDesk on the same computer, collects nothing and sends nothing to the author.
+- Problem reports: if the program closes unexpectedly you can choose to send a short report by email. Patient names and numbers are removed. Nothing is sent unless you send it.
+- The website https://labdesk.mutaib.me has its own privacy policy.
+
+5. NO WARRANTY
+LabDesk is provided "as is", without any warranty of any kind, express or implied, including fitness for a particular purpose, accuracy of results, or uninterrupted or error-free operation. This is the same as the warranty disclaimer in the GNU General Public License.
+
+6. LIMIT OF LIABILITY
+To the fullest extent the law allows, the author is not liable for any loss or damage that comes from using or not being able to use LabDesk. This includes wrong or delayed results, medical decisions taken from a report, lost or damaged data, lost income, and claims by patients or other people. Nothing in these terms limits a liability that cannot be limited by law.
+
+7. NAME AND LOGO
+The GPL gives you the right to the source code. It does not give you any right to the name "LabDesk" or its logo. If you share a changed version, please call it something else and say that it is changed.
+
+8. CHANGES TO THESE TERMS
+These terms may change in a later version of LabDesk. If they change, LabDesk will ask you to read and accept them again.
+
+9. LAW
+These terms are governed by the laws of India.
+
+10. CONTACT
+syedmutaibnazir@gmail.com  -  Instagram: MUTAIB005
